@@ -487,7 +487,6 @@ html, body {
 .btn-nebula:link,
 .btn-nebula:visited {
   text-decoration: none;
-  -webkit-text-decoration-skip-ink: auto;
   color: inherit;           /* hereda color del contexto (o usa un color fijo: #fff) */
   font-family: inherit;     /* asegura misma fuente que el resto */
   cursor: pointer;

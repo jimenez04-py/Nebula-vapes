@@ -1,8 +1,8 @@
 <section class="hero">
   <div class="background"></div>
 
-  <!-- capa de estrellas: cubre todo el viewport -->
-  <div class="starfield" aria-hidden="true"></div>
+  <!-- capa de estrellas (canvas para estrellas procedurales) -->
+  <canvas #starCanvas class="starfield-canvas" aria-hidden="true"></canvas>
 
   <!-- TITULO "hero" detrás del logo -->
   <h1 class="hero-title">NEBULA VAPES</h1>
@@ -73,7 +73,17 @@
 
         <div class="modal-actions">
           <button class="btn-nebula" (click)="cerrarModal()">Cerrar</button>
-          <button class="btn-nebula" (click)="cerrarModal()">Pedir ahora</button>
+
+          <!-- Cambiado: enlace que abre Instagram en otra pestaña y cierra el modal -->
+          <a
+            class="btn-nebula"
+            href="https://www.instagram.com/nebula_vpss/" 
+            target="_blank"
+            rel="noopener noreferrer"
+            (click)="cerrarModal()"
+          >
+            Pedir ahora
+          </a>
         </div>
       </ng-container>
     </div>

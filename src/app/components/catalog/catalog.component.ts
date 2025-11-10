@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -13,7 +13,22 @@ gsap.registerPlugin(ScrollTrigger);
   templateUrl: './catalog.component.html',
   styleUrls: ['./catalog.component.css']
 })
-export class CatalogComponent implements AfterViewInit {
+export class CatalogComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('starCanvas', { static: true }) starCanvas!: ElementRef<HTMLCanvasElement>;
+
+  private ctx!: CanvasRenderingContext2D | null;
+  private stars: {
+    x: number;
+    y: number;
+    size: number;
+    baseAlpha: number;
+    twPhase: number;
+    depth: number;
+  }[] = [];
+  private raf = 0;
+  private mouseX = 0;
+  private mouseY = 0;
+  private pixelRatio = 1;
 
   mostrarModal = false;
 
@@ -134,6 +149,119 @@ export class CatalogComponent implements AfterViewInit {
       scale: 1.2,
       ease: 'power1.out'
     });
+
+    // inicializar canvas de estrellas
+    this.initStarfield();
+  }
+
+  ngOnDestroy() {
+    cancelAnimationFrame(this.raf);
+    window.removeEventListener('resize', this.onResizeBound);
+    window.removeEventListener('mousemove', this.onMouseMoveBound);
+  }
+
+  // Bindings para remover listeners correctamente
+  private onResizeBound = this.onResize.bind(this);
+  private onMouseMoveBound = this.onMouseMove.bind(this);
+
+  private initStarfield() {
+    const canvas = this.starCanvas.nativeElement;
+    this.ctx = canvas.getContext('2d');
+    this.pixelRatio = window.devicePixelRatio || 1;
+    window.addEventListener('resize', this.onResizeBound);
+    window.addEventListener('mousemove', this.onMouseMoveBound);
+    this.onResize();
+    this.createStars();
+    this.raf = requestAnimationFrame(this.render.bind(this));
+  }
+
+  private onResize() {
+    const canvas = this.starCanvas.nativeElement;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = Math.round(w * this.pixelRatio);
+    canvas.height = Math.round(h * this.pixelRatio);
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    if (this.ctx) this.ctx.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
+    // recrear estrellas para densidad apropiada
+    this.createStars();
+  }
+
+  private onMouseMove(e: MouseEvent) {
+    this.mouseX = e.clientX;
+    this.mouseY = e.clientY;
+  }
+
+  private createStars() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const area = w * h;
+    // cantidad escalada según área (ajusta factor si quieres más/menos)
+    const count = Math.round(Math.min(900, Math.max(80, area / 8000)));
+    this.stars = [];
+    for (let i = 0; i < count; i++) {
+      const depth = Math.random(); // 0 (cerca) - 1 (lejos)
+      const size = 0.4 + Math.pow(Math.random(), 2) * 2.6 * (1 - depth); // más pequeños en profundidad
+      const star = {
+        x: Math.random() * w,
+        y: Math.random() * h,
+        size,
+        baseAlpha: 0.25 + Math.random() * 0.85 * (1 - depth),
+        twPhase: Math.random() * Math.PI * 2,
+        depth
+      };
+      this.stars.push(star);
+    }
+  }
+
+  private render(t: number) {
+    const ctx = this.ctx;
+    if (!ctx) return;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    ctx.clearRect(0, 0, w, h);
+
+    // centro para calcular parallax
+    const cx = w / 2;
+    const cy = h / 2;
+    const mx = (this.mouseX - cx) / cx;
+    const my = (this.mouseY - cy) / cy;
+
+    // dibujar estrellas dispersas, con ligera variación posicional para evitar patrón
+    for (let i = 0; i < this.stars.length; i++) {
+      const s = this.stars[i];
+
+      // parallax: las estrellas más cercanas se mueven más con el cursor
+      const px = s.x + mx * 30 * (1 - s.depth);
+      const py = s.y + my * 20 * (1 - s.depth);
+
+      // ligero desplazamiento aleatorio temporal para romper la rejilla
+      const jitterX = Math.sin((t * 0.0008) + i) * (0.5 + s.depth * 0.8);
+      const jitterY = Math.cos((t * 0.0007) + i * 1.3) * (0.5 + s.depth * 0.5);
+
+      // parpadeo suave
+      const twinkle = 0.6 + Math.sin((t * 0.002) + s.twPhase) * 0.4;
+      const alpha = Math.max(0, Math.min(1, s.baseAlpha * twinkle));
+
+      // dibujar punto con gradiente circular para apariencia suave
+      const radius = Math.max(0.2, s.size);
+      const gx = px + jitterX;
+      const gy = py + jitterY;
+
+      const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, radius * 3);
+      grad.addColorStop(0, `rgba(255,255,255,${alpha})`);
+      grad.addColorStop(0.4, `rgba(255,255,255,${alpha * 0.6})`);
+      grad.addColorStop(1, `rgba(255,255,255,0)`);
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(gx, gy, radius * 1.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // loop
+    this.raf = requestAnimationFrame(this.render.bind(this));
   }
 }
 

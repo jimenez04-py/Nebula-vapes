@@ -1,0 +1,82 @@
+<section class="hero">
+  <div class="background"></div>
+
+  <!-- capa de estrellas: cubre todo el viewport -->
+  <div class="starfield" aria-hidden="true"></div>
+
+  <!-- TITULO "hero" detrás del logo -->
+  <h1 class="hero-title">NEBULA VAPES</h1>
+
+  <!-- WRAPPER: centra logo + subtítulo y los mantiene juntos -->
+  <div class="logo-hero-wrap" role="img" aria-label="Logo Nebula" tabindex="0">
+    <div class="logo-3d logo-hero">
+      <div class="logo-inner">
+        <div class="logo-face logo-front">
+          <img src="https://res.cloudinary.com/delkpdoic/image/upload/v1762789605/fondotransp_wrfhoe.png" alt="Nebula Vapes logo" class="logo-img" />
+        </div>
+        <div class="logo-face logo-back" aria-hidden="true" style="background-image: url('https://res.cloudinary.com/delkpdoic/image/upload/v1762789605/fondotransp_wrfhoe.png');"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="tag">THE SMOKE FROM ANOTHER UNIVERSE.</p>
+</section>
+
+<section class="catalog">
+  <div class="cloud-overlay"></div>
+
+  <h2 class="catalog-title">MODELOS EN EXISTENCIA</h2>
+
+  <div class="vape-grid">
+    <!-- Reemplazado por *ngFor para que el precio venga desde products (el signo $ queda antes) -->
+    <div class="vape-card" *ngFor="let p of products">
+      <div class="vape-3d">
+        <img [src]="p.image" [alt]="p.name + ' front'" class="vape-front" />
+        <img [src]="p.image" [alt]="p.name + ' back'" class="vape-back" />
+      </div>
+      <h3>{{ p.name }}</h3>
+      <h3>{{ p.price }}</h3>
+      <button class="btn-nebula" (click)="abrirModal(p.id)">{{ p.name }} SABORES</button>
+    </div>
+  </div>
+
+  <!-- Modal global (fuera de las tarjetas) -->
+  <div *ngIf="modalAbierto" class="modal-overlay" (click)="cerrarModal()" role="presentation" aria-hidden="false">
+    <div
+      class="modal-content"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Sabores del producto"
+      (click)="$event.stopPropagation()"
+      tabindex="0"
+    >
+      <button class="close-btn" (click)="cerrarModal()" aria-label="Cerrar modal">✕</button>
+
+      <ng-container *ngIf="productoSeleccionadoData as p">
+        <div class="modal-header">
+          <img [src]="p.image" [alt]="p.name" class="modal-product-img" />
+          <div>
+            <h2 class="modal-title">{{ p.name }}</h2>
+            <p class="modal-sub">{{ p.price }}</p>
+          </div>
+        </div>
+
+        <ul class="flavor-list">
+          <li
+            *ngFor="let sabor of p.flavors"
+            [ngClass]="{ 'flavor-special': isSpecial(p.id, sabor) }"
+          >
+            {{ sabor }}
+          </li>
+        </ul>
+
+        <div class="modal-actions">
+          <button class="btn-nebula" (click)="cerrarModal()">Cerrar</button>
+          <button class="btn-nebula" (click)="cerrarModal()">Pedir ahora</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</section>
+

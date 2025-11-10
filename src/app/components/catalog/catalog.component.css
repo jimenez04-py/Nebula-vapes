@@ -1,0 +1,877 @@
+/* Asegura que no haya marcos blancos y la vista sea fullscreen */
+:host, html, body {
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+html, body {
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Evitar salto por aparición/desaparición del scrollbar */
+html, body {
+  height: 100%;
+  /* fuerza espacio para la barra de scroll para que no aparezca/desaparezca */
+  overflow-y: scroll;
+  scrollbar-gutter: stable; /* soporte moderno; evita cambios de ancho al mostrar scrollbar */
+}
+
+/* Sección principal */
+.hero {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #000; /* fondo negro tipo espacio */
+}
+
+/* Fondo azul (se ve siempre) */
+.background {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  z-index: 0;
+}
+
+/* Curvas animadas */
+.topo {
+  position: absolute;
+  inset: 0;
+  width: 110%;
+  height: 110%;
+  z-index: 1;
+  filter: blur(0.3px);         /* suaviza líneas */
+  opacity: 0.9;                /* controla presencia */
+  pointer-events: none;
+}
+
+/* Movimiento sutil tipo “mapa topográfico” */
+.topo .tile {
+  /* animation desactivada para que las ondas no se muevan */
+  animation: none;
+}
+
+/* Título */
+.hero h1 {
+  position: absolute;
+  top: 35%;           
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffffff;
+  font-family: "Georgia", serif;
+  font-size: clamp(28px, 5vw, 64px);
+  font-weight: 700;
+  letter-spacing: 2px;
+  z-index: 2;
+  text-align: center;
+  text-shadow: 0 24px 20px rgba(0, 0, 0, 0.45);
+
+}
+
+
+/* Evitar que la regla global para h1 afecte al subtítulo del logo */
+.hero h1:not(.hero-subtitle) {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffffff;
+  font-family: "Georgia", serif;
+  font-size: clamp(28px, 5vw, 64px);
+  font-weight: 700;
+  letter-spacing: 2px;
+  z-index: 2;
+  text-align: center;
+  text-shadow: 0 24px 20px rgba(0, 0, 0, 0.45);
+}
+
+/* Subtítulo específico para el logo (sobrescribe cualquier otra regla) */
+.hero .hero-subtitle {
+  position: absolute;
+  top: calc(45% + 118px);
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.86rem;
+  letter-spacing: 1.6px;
+  color: #ffffff;
+  z-index: 7;
+  opacity: 0.95;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 0 6px 14px rgba(0,0,0,0.6);
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+
+/* Subtítulo del logo: mucho más pequeño y claramente debajo del logo */
+.hero-subtitle {
+  position: absolute;
+  top: calc(50% + 240px); /* ajusta si cambias el tamaño del logo */
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.20rem;      /* "chico chico" */
+  letter-spacing: 1.4px;
+  color: #ffffff;
+  z-index: 7;
+  opacity: 0.95;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 0 6px 10px rgba(0,0,0,0.55);
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* responsivo: mover/ajustar cuando el logo se reduce en pantallas pequeñas */
+@media (max-width: 900px) {
+  .hero-subtitle { top: calc(50% + 180px); font-size: 0.78rem; }
+}
+@media (max-width: 520px) {
+  .hero-subtitle { top: calc(50% + 96px); font-size: 0.68rem; }
+}
+
+.vape {
+  --vape-w: 220px;      
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: var(--vape-w);
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  filter: drop-shadow(0 24px 24px rgba(0, 0, 0, 0.35));
+  
+}
+
+
+.tag {
+  position: absolute;
+  right: clamp(16px, 4vw, 48px);
+  bottom: clamp(16px, 4vw, 40px);
+  color: #e9eef5;
+  font-family: "Georgia", serif;
+  font-size: clamp(8px, 1.2vw, 15px);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  z-index: 2;
+  opacity: .9;
+}
+
+.catalog {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1b1f29, #0e1118);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 100px 0;
+}
+
+
+.cloud-overlay {
+  position: absolute;
+  inset: 0;
+  background: url('https://png.pngtree.com/png-clipart/20220713/ourmid/pngtree-dark-cloud-effect-png-image_5912937.png')
+              no-repeat center center;
+  background-size: cover;
+  opacity: 0.12;
+  animation: driftClouds 40s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes driftClouds {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+
+.catalog-title {
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  margin-bottom: 50px;
+  text-align: center;
+  z-index: 1;
+}
+
+
+.vape-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 80px;
+  z-index: 1;
+}
+
+.vape-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  width: 260px;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  backdrop-filter: blur(8px);
+}
+
+.vape-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 40px rgba(150, 0, 255, 0.3);
+}
+
+.vape-card img {
+  width: 140px;
+  height: auto;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.35));
+}
+
+.vape-card h3 {
+  color: #ffffff;
+  font-size: 1.4rem;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.vape-card p {
+  color: #bcbcbc;
+  font-size: 0.95rem;
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.vape-grid {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  margin-top: 120px;
+}
+
+.vape-card {
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+.vape-3d {
+  position: relative;
+  width: 180px;
+  height: 280px;
+  perspective: 1000px;
+  margin-bottom: 15px;
+}
+
+.vape-3d img {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  transition: transform 0.8s ease, opacity 0.8s ease;
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+.vape-3d .vape-back {
+  transform: rotateY(180deg);
+  opacity: 0;
+}
+
+.vape-3d:hover .vape-front {
+  transform: rotateY(180deg);
+  opacity: 0;
+}
+
+.vape-3d:hover .vape-back {
+  transform: rotateY(0deg);
+  opacity: 1;
+}
+
+.vape {
+  opacity: 0;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.vape:hover {
+  transform: scale(1.05);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: #111;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #111;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.btn-nebula {
+  background: linear-gradient(90deg, #28272a, #6f6876);
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 7px rgba(128, 0, 255, 0.3);
+}
+
+.btn-nebula:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.6);
+  background: linear-gradient(90deg, #2c1552, #170b2b);
+}
+
+.btn-nebula:active {
+  transform: scale(0.97);
+}
+
+/* ==== MODAL ==== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  animation: fadeIn 0.18s ease;
+}
+
+.modal-content {
+  background: linear-gradient(180deg,#0d0f12,#131417);
+  color: #fff;
+  padding: 22px;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  text-align: center;
+  animation: scaleUp 0.22s ease;
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Cabecera del modal con imagen */
+.modal-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.modal-product-img {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.modal-sub {
+  margin: 0;
+  color: #b8c0cc;
+  font-size: 0.9rem;
+}
+
+/* Lista de sabores en columnas responsivas */
+.flavor-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
+  gap: 8px 12px;
+  list-style: none;
+  padding: 12px 6px;
+  margin: 12px 0 18px 0;
+  color: #e6eef8;
+}
+
+.flavor-list li {
+  background: rgba(255,255,255,0.02);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Accesibilidad y botón de cierre */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #cfd7e3;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.12s, color 0.12s;
+}
+.close-btn:hover { background: rgba(255,255,255,0.03); color: #ff7aa2; }
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Capa de estrellas con 3 planos (pequeñas, medianas, grandes) y ligero parpadeo */
+.starfield {
+  position: absolute;
+  inset: 0;
+  z-index: 0; /* atrás de título y vape (z-index:2) */
+  pointer-events: none;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* dos pseudo-elementos crean densidades diferentes para profundidad */
+.starfield::before,
+.starfield::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(#fff 1px, transparent 1.5px),
+    radial-gradient(rgba(255,255,255,0.85) 0.9px, transparent 1.4px),
+    radial-gradient(rgba(255,255,255,0.6) 1.2px, transparent 1.8px);
+  background-repeat: repeat;
+}
+
+/* plano cercano: más grandes y menos repetidos */
+.starfield::before {
+  background-position: 0 0, 60px 40px, 140px 220px;
+  background-size: 400px 400px, 220px 220px, 900px 900px;
+  opacity: 0.95;
+  animation: twinkle 6s linear infinite alternate;
+  filter: blur(0.2px);
+}
+
+/* plano lejano: más pequeños y más densos */
+.starfield::after {
+  background-position: 20px 120px, 180px 40px, 420px 300px;
+  background-size: 120px 120px, 280px 280px, 1200px 1200px;
+  opacity: 0.6;
+  animation: twinkle 10s linear infinite alternate;
+  filter: blur(0.6px);
+}
+
+/* pequeño parpadeo para sensación de vida */
+@keyframes twinkle {
+  0%   { opacity: 0.85; }
+  50%  { opacity: 0.45; }
+  100% { opacity: 0.9; }
+}
+
+/* Asegurarse que elementos principales permanezcan encima */
+.hero h1,
+.vape,
+.tag,
+.topo {
+  z-index: 2;
+}
+
+/* Logo 3D animado */
+.logo-3d {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  perspective: 900px; /* da profundidad a la rotación */
+  pointer-events: auto;
+}
+
+.logo-inner {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  transform-style: preserve-3d;
+  perspective: none;
+  animation: spin3d 8s linear infinite;
+  border-radius: 18px;
+  transition: transform .18s ease, box-shadow .18s ease;
+  overflow: hidden;
+}
+
+/* caras front/back ocupan todo el contenedor */
+.logo-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+/* frontal usa la imagen */
+.logo-front .logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 14px;
+  transform: translateZ(8px);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* trasera: por defecto usa la misma imagen como fondo, o puedes poner un degradado dorado */
+.logo-back {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* opcional: usar degradado dorado en lugar de la imagen si prefieres */
+  /* background: linear-gradient(135deg,#3a2600 0%, #8b5b00 50%, #ffd86b 100%); */
+  transform: rotateY(180deg); /* volverlo la cara trasera */
+  box-shadow: inset 0 -8px 20px rgba(0,0,0,0.45);
+}
+
+/* asegurar que al girar no se vea un fondo negro: poner fondo del contenedor similar al hero */
+.logo-inner, .logo-face { background-color: transparent; }
+
+/* pausar animación en hover (mantener comportamiento anterior) */
+.logo-inner:hover,
+.logo-inner:focus {
+  animation-play-state: paused;
+  transform: rotateY(0deg) scale(1.02);
+}
+
+/* mantener keyframes spin3d existente */
+/* --- Hero: logo grande y subtítulo pequeño --- */
+.logo-3d.logo-hero {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -58%);
+  z-index: 6;
+  perspective: 900px;
+  pointer-events: auto;
+}
+
+.logo-3d.logo-hero .logo-inner {
+  width: 440px;
+  height: 440px;
+  transform-style: preserve-3d;
+  animation: spin3d 8s linear infinite;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.65), inset 0 -10px 30px rgba(255,220,120,0.03);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.logo-3d.logo-hero .logo-inner:hover,
+.logo-3d.logo-hero .logo-inner:focus {
+  animation-play-state: paused;
+  transform: rotateY(0deg) scale(1.02);
+}
+
+.logo-3d.logo-hero .logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 14px;
+  transform: translateZ(8px);
+  display: block;
+}
+
+/* Subtítulo pequeño debajo del logo */
+.hero-subtitle {
+  position: absolute;
+  top: calc(50% + 220px); /* ajusta si cambias el tamaño del logo */
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.64rem;      /* "chico chico" */
+  letter-spacing: 1.6px;
+  color: #ffffff;
+  z-index: 7;
+  opacity: 0.95;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 0 6px 10px rgba(0,0,0,0.55);
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* responsivo: mover/ajustar cuando el logo se reduce en pantallas pequeñas */
+@media (max-width: 900px) {
+  .hero-subtitle { top: calc(50% + 180px); font-size: 0.66rem; }
+}
+@media (max-width: 520px) {
+  .hero-subtitle { top: calc(50% + 96px); font-size: 0.62rem; }
+}
+
+/* Limpieza: quitar reglas de debug que causaban contorno y fondo raro */
+.logo-3d { z-index: 6; } /* mantener z-index correcto */
+.logo-inner {
+  background: transparent;      /* sin fondo de debug */
+  box-shadow: 0 12px 30px rgba(0,0,0,0.55), inset 0 -6px 18px rgba(255,220,120,0.02);
+  border: none; /* quitar borde que crea contorno extraño */
+  will-change: transform;
+}
+
+/* Asegurar que no quede fondo debug */
+.logo-3d, .logo-inner { pointer-events: auto; }
+
+/* Añadir keyframes para la rotación 3D (suave) */
+@keyframes spin3d {
+  0%   { transform: rotateY(0deg)   rotateX(6deg); }
+  50%  { transform: rotateY(180deg) rotateX(-6deg); }
+  100% { transform: rotateY(360deg) rotateX(6deg); }
+}
+
+/* Aplicar la animación (ya presente en .logo-inner) */
+.logo-inner {
+  animation: spin3d 8s linear infinite;
+}
+
+/* Reemplazo: estilo premium + contorno dorado animado (sin la franja blanca anterior) */
+.flavor-special {
+  position: relative;
+  display: inline-block;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-weight: 800;
+  font-size: 0.98rem;
+  letter-spacing: 0.6px;
+  padding: 6px 12px;
+  border-radius: 10px;
+
+  /* texto en blanco (antes era degradado dorado) */
+  color: #fcd701d4;
+  -webkit-text-stroke: 0.2px rgba(0,0,0,0.45);
+
+  /* contorno base dorado */
+  border: 2px solid rgba(255,215,100,0.18);
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.55),
+    inset 0 -6px 18px rgba(255,200,60,0.02);
+
+  transition: transform 160ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  z-index: 1;
+  overflow: visible;
+}
+
+/* pseudo-elemento mantiene halo dorado alrededor de la tarjeta/nombre */
+.flavor-special::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 14px;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+    rgba(255,230,140,0.0) 0%,
+    rgba(255,220,100,0.06) 20%,
+    rgba(255,200,60,0.18) 50%,
+    rgba(255,220,100,0.06) 80%,
+    rgba(255,230,140,0.0) 100%);
+  filter: blur(8px);
+  opacity: 0.0;
+  transform: scale(0.98);
+  transition: opacity 280ms ease, transform 280ms ease;
+  z-index: 0;
+  mix-blend-mode: screen;
+}
+
+/* pulso muy sutil del halo */
+.flavor-special::before {
+  animation: goldPulse 4.5s ease-in-out infinite;
+}
+
+/* hover: resaltar contorno dorado y elevar */
+.flavor-special:hover,
+.flavor-special:focus {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255,215,100,0.45);
+  box-shadow:
+    0 14px 40px rgba(170,110,0,0.12),
+    inset 0 -8px 24px rgba(255,220,120,0.03);
+}
+.flavor-special:hover::before,
+.flavor-special:focus::before {
+  opacity: 0.95;
+  transform: scale(1.03);
+}
+
+/* eliminar/ocultar cualquier badge residual */
+.special-badge {
+  display: none !important;
+}
+
+/* ---------- Ajuste: asegurar subtítulo más visible y limpio ---------- */
+/* Reemplaza todas las reglas anteriores del .hero-subtitle por esta.
+   Coloca esta sección al final del archivo para que tenga prioridad. */
+.hero .hero-subtitle {
+  position: absolute;
+  top: calc(50% + 220px); /* ajústalo si cambias el tamaño del logo */
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+
+  /* más grande y responsive */
+  font-size: clamp(1.1rem, 3.2vw, 1.8rem);
+
+  letter-spacing: 1.6px;
+  color: #ffffff;
+  z-index: 7;
+  opacity: 0.98;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 0 6px 12px rgba(0,0,0,0.55);
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  pointer-events: none;
+}
+
+/* Ajustes responsive */
+@media (max-width: 900px) {
+  .hero .hero-subtitle {
+    top: calc(50% + 170px);
+    font-size: clamp(1.0rem, 4.0vw, 1.4rem);
+  }
+}
+@media (max-width: 520px) {
+  .hero .hero-subtitle {
+    top: calc(50% + 96px);
+    font-size: clamp(0.85rem, 5.5vw, 1.05rem);
+  }
+}
+
+/* responsive: grid de productos, imágenes y modal */
+.vape-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  align-items: start;
+  padding: 12px;
+}
+
+.vape-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+  padding: 12px;
+  background: transparent;
+}
+
+/* imágenes responsivas dentro de tarjetas */
+.vape-front,
+.vape-back,
+.logo-img,
+.modal-product-img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* modal adaptable a móvil */
+.modal-content {
+  width: 92vw;
+  max-width: 520px;
+  padding: 18px;
+}
+
+/* botones con objetivo táctil adecuado */
+.btn-nebula {
+  padding: 10px 14px;
+  font-size: 0.95rem;
+}
+
+/* logo responsive: usa tamaños por breakpoint */
+.logo-3d.logo-hero .logo-inner {
+  width: 340px;
+  height: 340px;
+}
+@media (max-width: 900px) {
+  .logo-3d.logo-hero .logo-inner { width: 260px; height: 260px; }
+  .vape-grid { gap: 12px; }
+}
+@media (max-width: 520px) {
+  .logo-3d.logo-hero .logo-inner { width: 160px; height: 160px; }
+  .vape-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .hero-subtitle { font-size: 0.78rem; }
+  .btn-nebula { padding: 12px 16px; font-size: 1rem; }
+}
+
+/* evitar overflow horizontal */
+body, .hero, .catalog {
+  overflow-x: hidden;
+}

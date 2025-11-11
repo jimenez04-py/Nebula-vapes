@@ -939,3 +939,25 @@ html, body {
 
 /* Si aún existe .starfield, ocultarla para evitar conflicto */
 .starfield { display: none !important; }
+
+.flavor-list { list-style: none; margin: 0; padding: 0; }
+.flavor-list li { margin: 4px 0; font-size: 0.9rem; }
+
+.flavor-soldout {
+  color: #ff3b3b;
+  font-weight: 600;
+  text-decoration: line-through;
+  opacity: .85;
+}
+
+.soldout-badge {
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 0.55rem;
+  line-height: 1;
+  border-radius: 4px;
+  background: rgba(255,60,60,0.15);
+  color: #ff5d5d;
+  border: 1px solid rgba(255,60,60,0.35);
+  letter-spacing: .5px;
+}

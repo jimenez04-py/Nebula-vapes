@@ -1,5 +1,6 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -9,11 +10,11 @@ gsap.registerPlugin(ScrollTrigger);
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './catalog.component.html',
   styleUrls: ['./catalog.component.css']
 })
-export class CatalogComponent implements AfterViewInit, OnDestroy {
+export class CatalogComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild('starCanvas', { static: true }) starCanvas!: ElementRef<HTMLCanvasElement>;
 
   private ctx!: CanvasRenderingContext2D | null;
@@ -62,7 +63,7 @@ export class CatalogComponent implements AfterViewInit, OnDestroy {
         'JUICY PEACH SODA',
       	'GRAPE SODA',
         'FROZEN WHITE GRAPE',
-	      'FROZEN PEACH MANGO WATERMELON',
+	      'PEACH MANGO WATERMELON (sold out)',
   	    '2 FROZEN WATERMELON'
       ]
     },
@@ -72,7 +73,7 @@ export class CatalogComponent implements AfterViewInit, OnDestroy {
       price: '$250',
       image: 'https://lavaperia.com/cdn/shop/files/pineapplebananaice1000px.webp?v=1759789448&width=510',
       flavors: [
-        '2 ALLSTAR',
+        'ALLSTAR',
         '2 COOL MINT',
         'RODZILLA',
         'THE WORM',
@@ -112,6 +113,25 @@ export class CatalogComponent implements AfterViewInit, OnDestroy {
     'THE MENACE'
   ]);
 
+  private soldOutMap = new Map<string, Set<string>>();
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.http.get<Record<string, string[]>>('assets/sold-out.json', { headers: { 'cache-control': 'no-cache' } })
+      .subscribe({
+        next: (data) => {
+          Object.entries(data || {}).forEach(([pid, flavors]) => {
+            this.soldOutMap.set(pid.toUpperCase(), new Set((flavors || []).map(f => f.toUpperCase().trim())));
+          });
+        },
+        error: () => {
+          // si falla, deja vacío
+          this.soldOutMap.clear();
+        }
+      });
+  }
+
   abrirModal(productId: string) {
     this.productoSeleccionadoData = this.products.find(p => p.id === productId) || null;
     this.modalAbierto = true;
@@ -126,6 +146,11 @@ export class CatalogComponent implements AfterViewInit, OnDestroy {
     if (!productId || !flavor) return false;
     if (productId.toUpperCase() !== 'RODMAN') return false;
     return this.rodmanSpecials.has(flavor.toUpperCase().trim());
+  }
+
+  isFlavorSoldOut(productId: string, flavor: string): boolean {
+    const set = this.soldOutMap.get((productId || '').toUpperCase());
+    return !!set && set.has((flavor || '').toUpperCase().trim());
   }
 
   ngAfterViewInit() {

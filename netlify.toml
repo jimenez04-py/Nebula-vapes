@@ -2,8 +2,8 @@
   command = "npm run build"
   publish = "dist/nebula-vapes/browser"
 
+# SPA redirect (no rompe si los .js existen)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  force = true

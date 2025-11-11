@@ -13,16 +13,13 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/nebula-vapes",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              },
               {
                 "glob": "**/*",
                 "input": "src/assets"

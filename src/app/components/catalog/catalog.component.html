@@ -62,12 +62,14 @@
           </div>
         </div>
 
+        <!-- ejemplo dentro de tu modal o tarjeta de producto -->
         <ul class="flavor-list">
           <li
-            *ngFor="let sabor of p.flavors"
-            [ngClass]="{ 'flavor-special': isSpecial(p.id, sabor) }"
+            *ngFor="let sabor of productoSeleccionadoData?.flavors || []"
+            [ngClass]="{ 'sold-out': isFlavorSoldOut(productoSeleccionadoData!.id, sabor) }"
           >
             {{ sabor }}
+            <span class="badge-sold" *ngIf="isFlavorSoldOut(productoSeleccionadoData!.id, sabor)">Agotado</span>
           </li>
         </ul>
 

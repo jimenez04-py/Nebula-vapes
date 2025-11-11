@@ -153,6 +153,14 @@ export class CatalogComponent implements AfterViewInit, OnDestroy, OnInit {
     return !!set && set.has((flavor || '').toUpperCase().trim());
   }
 
+  isFlavorTextSoldOut(flavor: string): boolean {
+    return /\(sold out\)/i.test(flavor);
+  }
+
+  cleanFlavorText(flavor: string): string {
+    return flavor.replace(/\(sold out\)/ig, '').trim();
+  }
+
   ngAfterViewInit() {
     // Animación inicial
     gsap.to('.vape', {

@@ -43,7 +43,7 @@ export class CatalogComponent implements AfterViewInit, OnDestroy, OnInit {
       price: '$350',
       image: 'https://nimbusmx.com/cdn/shop/files/Waka15k.webp?v=1730955334',
       flavors: [
-        'FRESH MIN',
+        'FRESH MINT (sold out)',
         'KIWI DRAGON BERRY',
         'WATERMELON KIWI',
         'PEACH BLUE RASPBERRY',

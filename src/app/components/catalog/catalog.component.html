@@ -66,10 +66,15 @@
         <ul class="flavor-list" *ngIf="productoSeleccionadoData">
           <li
             *ngFor="let sabor of productoSeleccionadoData.flavors"
-            [class.flavor-soldout]="isFlavorTextSoldOut(sabor)"
+            [ngClass]="{
+              'flavor-special': isSpecial(productoSeleccionadoData.id, sabor),
+              'flavor-soldout': isFlavorTextSoldOut(sabor) || isFlavorSoldOut(productoSeleccionadoData.id, sabor)
+            }"
           >
             {{ cleanFlavorText(sabor) }}
-            <span class="soldout-badge" *ngIf="isFlavorTextSoldOut(sabor)">SOLD OUT</span>
+            <span class="soldout-badge" *ngIf="isFlavorTextSoldOut(sabor) || isFlavorSoldOut(productoSeleccionadoData.id, sabor)">
+              SOLD OUT
+            </span>
           </li>
         </ul>
 

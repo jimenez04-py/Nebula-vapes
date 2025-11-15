@@ -79,13 +79,13 @@ export class CatalogComponent implements AfterViewInit, OnDestroy, OnInit {
         'THE WORM',
         'RODMAN BLAST',
         'THE MENACE',
-        'HALL OF FAME'
+        'HALL OF FAME (sold out)',
       ]
     },
     {
       id: 'ELUX',
       name: 'ELUX',
-      price: '$350',
+      price: '$300',
       image: 'https://vapematemx.com/cdn/shop/files/elux18000tesla.png?v=1740182401',
       flavors: [
         'LOST CHERRY',

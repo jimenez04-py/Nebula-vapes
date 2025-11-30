@@ -60,7 +60,7 @@ export class CatalogComponent implements AfterViewInit, OnDestroy, OnInit {
       flavors: [
         'FUCKING FAB SODA',
 	      'FROZEN SOUR APPLE',
-        'JUICY PEACH SODA',
+        'JUICY PEACH SODA (sold out)',
       	'GRAPE SODA',
         'FROZEN WHITE GRAPE',
 	      'PEACH MANGO WATERMELON (sold out)',
